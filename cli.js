@@ -7,6 +7,7 @@ var CLI = function(fileType) {
             '*.css',
             '*.html'
         ],
+        executeFlag = true,
         init,
         _typeCount = 0,
         _fileList = [],
@@ -34,11 +35,12 @@ var CLI = function(fileType) {
             });
             findCli.on('exit', function (code) {
                 //console.log('ps process exited with code ' + code);
-                //console.log(_fileList); 
+                //console.log(_fileList);
                 _typeCount ++;
-                if (_typeCount >= _types.length) {
+                if (_typeCount >= _types.length && executeFlag) {
                     _cliEvent.emit('data');
                     _cliEvent.removeAllListeners('data')
+                    executeFlag = false;
                 }
             });
         });
