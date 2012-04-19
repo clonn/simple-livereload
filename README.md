@@ -1,6 +1,6 @@
 #Simple Livereload#
 
-livereload on (node)[http://nodejs.org] version, and make it very simple, easy using. Simple livereload is under on linux base, and Chrome browser only. 
+livereload on [node](http://nodejs.org) version, and make it very simple, easy using. Simple livereload is under on linux base, and Chrome browser only. 
 
 ##Installation##
 
@@ -40,8 +40,8 @@ Of course, after initial server, open your chorme browser and set config of live
 
 ##Reference##
 
- * [livereload Github](https://github.com/mockko/livereload)
- * [node-livereload](https://github.com/josh/node-livereload)
+ * (livereload Github)[https://github.com/mockko/livereload]
+ * (node-livereload)[https://github.com/josh/node-livereload]
 
 ## License 
 
