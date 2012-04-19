@@ -22,6 +22,7 @@ var fs = require('fs'),
             '*.jpg'
         ]
     },
+    watched = [],
     cli = require('../cli')(config.fileType),
     HOMEPATH = process.env.PWD,
     files= [];
@@ -30,8 +31,11 @@ config.port = process.argv[2] || config.port;
 config.port = parseInt(config.port, 10);
 
 cli.getFileList('data', function (files) {
-    this.files = files;
-    this.files.forEach(function (file) {
+    files.forEach(function (file) {
+        if (watched[file]) {
+            return;
+        }
+        watched[file] = true;
         fs.watchFile(file, function (curr, prev) {
             if (file.indexOf(".scss") > -1) {
                 spawn('compass_lite', [file, file.replace(".scss", ".css")]);
