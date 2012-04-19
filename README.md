@@ -35,8 +35,8 @@ Of course, after initial server, open your chorme browser and set config of live
 ##Requirement##
 
  * Server: linux
- * Client: (Chrome browser)[https://www.google.com/chrome]
- * Chrome extension: (livereload)[https://chrome.google.com/webstore/detail/jnihajbhpnppcggbcgedagnkighmdlei]
+ * Client: [Chrome browser](https://www.google.com/chrome)
+ * Chrome extension: [livereload](https://chrome.google.com/webstore/detail/jnihajbhpnppcggbcgedagnkighmdlei)
 
 ##Reference##
 
