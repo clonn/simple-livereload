@@ -70,3 +70,5 @@ var sendRefresh = function (path) {
 
   config.socket.send(message);
 };
+
+console.log( 'Simple-livereload is starting...' );
