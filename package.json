@@ -1,0 +1,20 @@
+{
+  "name": "simple-livereload",
+  "description": "For chrome browser only, have to install livereload plugin",
+  "version": "0.0.2",
+  "author": "Caesar Chi / clonn <clonncd@gmail.com>",
+  "contributors": [
+    { "name": "clonn", "email": "clonncd@gmail.com" }
+  ],
+  "dependencies": {
+    "websock": "0.3.18"
+  },
+  "keywords": ["livereload", "file watch", "websocket"],
+  "repository": "git@github.com:clonn/simple-livereload.git",
+  "main": "index",
+  "bin": { "simple-livereload": "./bin/simple-livereload" },
+  "scripts": {
+    "prepublish" : "npm prune"
+  },
+  "engines": { "node":">= 0.5.0" }
+}
