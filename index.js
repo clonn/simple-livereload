@@ -8,7 +8,7 @@ var fs = require('fs'),
         applyJSLive: false,
         applyCSSLive: true,
         applyIMGLive: true,
-        port: 50072,
+        port: 35728,
         socket: {},
         fileType : [
             '*.php',
@@ -24,9 +24,6 @@ var fs = require('fs'),
     cli = require('./cli')(config.fileType),
     HOMEPATH = process.env.PWD;
 
-config.port = process.argv[2] || config.port;
-config.port = parseInt(config.port, 10);
-
 cli.getFileList('data', function (files) {
     files.forEach(function (file) {
         if (watched[file]) {
@@ -40,11 +37,18 @@ cli.getFileList('data', function (files) {
         });
     });
 });
-cli.run();
 
 var connect = function (port) {
+    port = port || config.port;
+
+    console.log('Simple-livereload is starting...');
+    console.log('server port :' + port);
+
+    cli.run();
+
     console.log("connect server...");
-    ws.listen(config.port, function (socket) {
+    ws.listen(port, function (socket) {
+        console.log(port);
         config.socket = socket;
         console.log( 'Browser: Connected socket (' + socket.version + ')' );
 
@@ -58,6 +62,16 @@ var connect = function (port) {
         });
         config.ready = true;
     });
+};
+
+var setConfig = function (cfg) {
+    var i;
+    for (i in cfg) {
+        config[i] = cfg[i];
+        console.log(i);
+    }
+
+    console.log(config);
 };
 
 var onChange = function (path, current, previous) {
@@ -94,8 +108,5 @@ var sendRefresh = function (path) {
   config.socket.send(message);
 };
 
-console.log('Simple-livereload is starting...');
-console.log('server port :' + config.port);
-
-//initial websocket server
-connect(config.port);
+module.exports.connect = connect;
+module.exports.setConfig = setConfig;

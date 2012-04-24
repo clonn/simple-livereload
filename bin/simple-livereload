@@ -10,7 +10,7 @@ var fs = require('fs'),
         applyJSLive: false,
         applyCSSLive: true,
         applyIMGLive: true,
-        port: 50072,
+        port: 35728,
         socket: {},
         fileType : [
             '*.php',
