@@ -34,10 +34,6 @@ cli.getFileList('data', function (files) {
         }
         watched[file] = true;
         fs.watchFile(file, function (curr, prev) {
-            if (file.indexOf(".scss") > -1) {
-                spawn('compass_lite', [file, file.replace(".scss", ".css")]);
-                return;
-            }
             if (config.ready) {
                 onChange(file, curr, prev);
             }
@@ -65,10 +61,26 @@ var connect = function (port) {
 };
 
 var onChange = function (path, current, previous) {
-  if (current.mtime > previous.mtime) {
-      console.log("Changed : " + path);
+    var regStr = config.fileType.join("$|\\"),
+        reg;
+
+    regStr += "$";
+    regStr = regStr.replace(/\*/g, "\\");
+    regStr = regStr.replace(/\\+/g, "\\");
+    reg = new RegExp(regStr, "ig");
+
+    if ( ! reg.exec(path)) {
+        return;
+    }
+
+    if (current.size != previous.size && current.mtime > previous.mtime) {
+      console.log("file has been Changed : " + path);
+      if (path.indexOf(".scss") > -1) {
+          spawn('compass_lite', [path, path.replace(".scss", ".css")]);
+          return;
+      }
       sendRefresh(HOMEPATH);
-  };
+    };
 };
 
 var sendRefresh = function (path) {
