@@ -1,102 +1,59 @@
-var fs = require('fs'),
-    spawn = require('child_process').spawn,
+var explorer = require('./main'),
     ws = require('websock'),
-    socket,
-    config = {
-        ready: false,
-        LiveReload: '1.6',
-        applyJSLive: false,
-        applyCSSLive: true,
-        applyIMGLive: true,
-        port: 35728,
-        socket: {},
-        fileType : [
-            '*.php',
-            '*.js',
-            '*.scss',
-            '*.css',
-            '*.php',
-            '*.html',
-            '*.jpg'
-        ]
-    },
-    watched = [],
-    cli = require('./cli')(config.fileType),
-    HOMEPATH = process.env.PWD;
+    config = explorer.config;
 
-cli.getFileList('data', function (files) {
-    files.forEach(function (file) {
-        if (watched[file]) {
-            return;
-        }
-        watched[file] = true;
-        fs.watchFile(file, function (curr, prev) {
-            if (config.ready) {
-                onChange(file, curr, prev);
-            }
-        });
-    });
-});
+// initial function.
+var start = function () {
 
-var connect = function (port) {
+    // watch files, and register update callback event.
+    explorer.on('update', onChange);
+    // execute explorer.
+    explorer.run();
+
     port = port || config.port;
 
+    // show system log message.
     console.log('Simple-livereload is starting...');
     console.log('server port :' + port);
-
-    cli.run();
-
     console.log("connect server...");
+
+    // create Websocket server.
+    createServer();
+
+};
+
+// Create WebSocket server, the port setting is from config.js file.
+var createServer = function () {
+    // Set websocket server.
     ws.listen(port, function (socket) {
-        console.log(port);
         config.socket = socket;
-        console.log( 'Browser: Connected socket (' + socket.version + ')' );
 
         socket.send( "!!ver:" + config.LiveReload );
 
         socket.on('message', function ( msg ) {
-          console.log( 'Browser: ' + msg );
+            console.log( 'Browser: ' + msg );
         });
+
         socket.on('close', function () {
-          console.log( 'Browser: Disconnected');
+            console.log( 'Browser: Disconnected');
         });
+
         config.ready = true;
     });
 };
 
-var setConfig = function (cfg) {
-    var i;
-    for (i in cfg) {
-        config[i] = cfg[i];
-        console.log(i);
-    }
+// file update event, have to registed before executed start function.
+// onChange will call websocket event to client message.
+var onChange = function (obj) {
 
-    console.log(config);
+    var path = obj.fullpath,
+        current = obj.curr,
+        previous = obj.prev;
+
+    sendRefresh(path);
 };
 
-var onChange = function (path, current, previous) {
-    var regStr = config.fileType.join("$|\\"),
-        reg;
-
-    regStr += "$";
-    regStr = regStr.replace(/\*/g, "\\");
-    regStr = regStr.replace(/\\+/g, "\\");
-    reg = new RegExp(regStr, "ig");
-
-    if ( ! reg.exec(path)) {
-        return;
-    }
-
-    if (current.size != previous.size && current.mtime > previous.mtime) {
-      console.log("file has been Changed : " + path);
-      if (path.indexOf(".scss") > -1) {
-          spawn('compass_lite', [path, path.replace(".scss", ".css")]);
-          return;
-      }
-      sendRefresh(HOMEPATH);
-    };
-};
-
+// Send message to Client who linked to websocket server.
 var sendRefresh = function (path) {
   var message = JSON.stringify(['refresh', {
     path: path,
@@ -108,5 +65,7 @@ var sendRefresh = function (path) {
   config.socket.send(message);
 };
 
-module.exports.connect = connect;
-module.exports.setConfig = setConfig;
+if (!config.port) {
+    throw 'Port is not defined.';
+}
+connect(config.port);
