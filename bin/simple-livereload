@@ -10,5 +10,8 @@ port = parseInt(port, 10);
 if (! isNaN(port)) {
     livereload.setPort(port);
 }
+else {
+    console.log('Simple livereload v0.0.8.');
+}
 
 livereload.start();
