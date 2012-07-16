@@ -1,29 +1,10 @@
-var explorer = require('./main'),
+var watcher = require('./watcher'),
     ws = require('websock'),
-    config = explorer.config;
+    config = require('./config');
 
-// initial function.
-var start = function () {
-
-    // watch files, and register update callback event.
-    explorer.on('update', onChange);
-    // execute explorer.
-    explorer.run();
-
-    port = port || config.port;
-
-    // show system log message.
-    console.log('Simple-livereload is starting...');
-    console.log('server port :' + port);
-    console.log("connect server...");
-
-    // create Websocket server.
-    createServer();
-
-};
 
 // Create WebSocket server, the port setting is from config.js file.
-var createServer = function () {
+var createServer = function (port) {
     // Set websocket server.
     ws.listen(port, function (socket) {
         config.socket = socket;
@@ -62,10 +43,45 @@ var sendRefresh = function (path) {
     apply_images_live: config.applyIMGLive
   }]);
 
+  if (!config.socket) {
+      return;
+  }
+
   config.socket.send(message);
 };
 
-if (!config.port) {
-    throw 'Port is not defined.';
-}
-connect(config.port);
+/**
+ *
+ * module export
+ * setPort
+ * setup port number.
+ *
+ */
+module.exports.setPort = function (port) {
+    config.port = port;
+    return config;
+};
+
+// initial function.
+module.exports.start = start = function () {
+
+    var port = config.port;
+
+    port = parseInt(port, 10);
+
+    // watch files, and register update callback event.
+    watcher.on('update', onChange);
+    // execute watcher.
+    watcher.run();
+
+
+    // show system log message.
+    console.log('Simple-livereload is starting...');
+    console.log('server port :' + port);
+    console.log("connect server...");
+
+    // create Websocket server.
+    createServer(port);
+
+};
+
