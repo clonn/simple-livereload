@@ -1,8 +1,8 @@
-var fs = require('fs');
-var config = require('./config');
-var configFolderPath = process.cwd();
-var vm = require('vm');
-var path = require('path');
+var fs = require('fs'),
+    config = require('./config'),
+    configFolderPath = process.cwd(),
+    vm = require('vm'),
+    path = require('path');
 
 function reverseFile (dirname) {
     var dirname = dirname || configFolderPath;
@@ -61,9 +61,9 @@ function watchFile(fullpath) {
 
 /**
   * Set export instances, and set setter.
-  */ 
+  */
 
-module.exports.callbacks = []; 
+module.exports.callbacks = [];
 
 module.exports.on = function (event, cb) {
     if (this.callbacks[event]) {
@@ -80,20 +80,20 @@ module.exports.fire = function (event, obj) {
     }
 };
 
-module.exports.setConfig = function (path) { 
-    
-        configFolderPath = path || configFolderPath;        
+module.exports.setConfig = function (path) {
+
+        configFolderPath = path || configFolderPath;
         console.log('Setup => Loading Path :' + configFolderPath);
 
         var configFile = 'config.js',
             encode = 'utf8',
-            src; 
+            src;
 
         try {
             src = fs.readFileSync(configFolderPath + '/' + configFile, encode);
             vm.runInNewContext(config, src, configFile);
         } catch (e) {
-        
+
         }
 
 };
