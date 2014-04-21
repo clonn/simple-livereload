@@ -44,7 +44,7 @@ function reverseFile (dirname) {
 
 function watchFile(fullpath) {
 
-    fs.watchFile(fullpath, {presistent: true}, function (curr, prev) {
+    fs.watchFile(fullpath, {presistent: true,interval:0}, function (curr, prev) {
 
         if (+curr.mtime !== +prev.mtime) {
             console.log(fullpath + ': File modified');
