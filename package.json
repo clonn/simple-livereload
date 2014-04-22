@@ -1,7 +1,7 @@
 {
   "name": "simple-livereload",
   "description": "For chrome browser only, have to install livereload plugin",
-  "version": "0.0.9",
+  "version": "0.0.93",
   "author": "Caesar Chi / clonn <clonncd@gmail.com>",
   "contributors": [
     { "name": "clonn", "email": "clonncd@gmail.com" }
