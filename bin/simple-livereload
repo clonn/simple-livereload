@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var livereload = require('../index');
+var package = require("../package.json");
 
 var port;
 
@@ -11,6 +12,6 @@ if (! isNaN(port)) {
     livereload.setPort(port);
 }
 
-console.log('Simple livereload v0.0.8.');
+console.log('Simple livereload v' + package.version);
 
 livereload.start();
